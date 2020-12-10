@@ -1,4 +1,6 @@
 //refeer to: https://gist.github.com/marchawkins/93f628fee062ff6edce3
+//refer to https://stackoverflow.com/questions/11607465/need-good-example-google-calendar-api-in-javascript
+//refer to https://gsuite-developers.googleblog.com/2011/12/using-new-js-library-to-unlock-power-of.html
 
 <div class="row">
 	<div class="col-md-2 col-sm-2 col-xs-12">
