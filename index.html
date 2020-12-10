@@ -19,11 +19,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Say hello using the People API</title>
+    <title>Say hello using the Calendar API</title>
     <meta charset='utf-8' />
   </head>
   <body>
-    <p>Say hello using the People API.</p>
+    <p>Say hello using the Calendar API.</p>
 
     <!--Add buttons to initiate auth sequence and sign out-->
     <button id="authorize-button" >Authorize</button>
@@ -48,8 +48,9 @@
 
     var clientId = '142887273601-6h976pqhgps9lm0q85lbmrc7rqtmihp3.apps.googleusercontent.com';
     var apiKey = 'AIzaSyCxmCwLCpeQRyyF_P-5LEXIlQnJqDy2UCM';
-    var scopes = 'https://www.googleapis.com/auth/calendar.readonly';
+    var scopes = 'https://www.googleapis.com/auth/calendar';
     var discoveryDocs = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest' ;
+                       
 
       var authorizeButton = document.getElementById('authorize-button');
       var signoutButton = document.getElementById('signout-button');
@@ -75,6 +76,7 @@
             'clientId': clientId,
             'scope': scopes
         }).then(
+                
                 function () 
                 {
                     console.log('function initClient() then executed') ;
@@ -89,10 +91,12 @@
                 },
                 function(error) 
                 {
-                    appendPre(JSON.stringify(error, null, 2));
+                    console.log('function initClient() then function(error)  executed') ;
+                    //appendPre(JSON.stringify(error, null, 2));
                 }
             );
         //alert('initClient exit'); 
+        console.log('function initClient() finished ') ;
       }
       
       
