@@ -26,19 +26,23 @@
 
     function checkAuth() 
     {
+      console.log('checkAuth entered');
       gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true},handleAuthResult);
     }
 
     function handleAuthResult(authResult) 
     {
+      console.log('handleAuthResult');
       var authorizeButton = document.getElementById('authorize-button');
       if (authResult) 
       {
+        console.log('handleAuthResult authResult'+authResult);
         authorizeButton.style.visibility = 'hidden';
         makeApiCall();
       }
       else 
       {
+        console.log('handleAuthResult authResult'+authResult);
         authorizeButton.style.visibility = '';
         authorizeButton.onclick = handleAuthClick;
        }
@@ -53,6 +57,7 @@
       
     function makeApiCall() 
     {
+       console.log('makeApiCall');
       gapi.client.load('calendar', 'v3', function() 
         {
         var request = gapi.client.calendar.events.list({'calendarId': 'primary'});
