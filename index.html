@@ -100,8 +100,10 @@
     }
     
     
-    function listUpcomingEvents() 
+     function listUpcomingEvents() 
     {
+
+        //gapi.client.load('plus','v1',callback);
         var listPara = {
             'calendarId': '2sfd4hud4qp3cp0knk70c3pt8k@group.calendar.google.com',
             'timeMin': (new Date()).toISOString(),
@@ -111,11 +113,25 @@
             'orderBy': 'startTime'
         } ;
 
-        gapi.client.calendar.events.list(listPara).then(function(response) 
-        {
+            gapi.client.load('calendar', 'v3', () => {
+                gapi.client.calendar.events.list(listPara).then(function (response) 
+                    {
+                        let events = response.result.items;
+                        /* do something with events */
+                    });
+                }
+            );
+        //var calendar_id = '2sfd4hud4qp3cp0knk70c3pt8k@group.calendar.google.com';
+        //var start_date = new Date();
+        //var query = Calendar.Events.list(calendar_id, {timeMin: start_date.toISOString()});
+        //var events = query.items;
+
+
+        //gapi.client.calendar.events.list(listPara).then(function(response) 
+        //{
             //var events = response.result.items;
-            console.log(response) ;
-        });
+        //    console.log(response) ;
+        //});
     }
     
     function makeCall()
