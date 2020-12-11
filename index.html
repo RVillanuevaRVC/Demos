@@ -21,7 +21,7 @@
     {
         console.log('initClient');
         // In practice, your app can retrieve one or more discovery documents.
-        var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+        var discoveryUrl = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest' ;//https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
 
         // Initialize the gapi.client object, which app uses to make API requests.
         // Get API key and client ID from API Console.
@@ -113,6 +113,7 @@
             'orderBy': 'startTime'
         } ;
 
+        /*
             gapi.client.load('calendar', 'v3', () => {
                 gapi.client.calendar.events.list(listPara).then(function (response) 
                     {
@@ -122,17 +123,18 @@
                     });
                 }
             );
+    */
         //var calendar_id = '2sfd4hud4qp3cp0knk70c3pt8k@group.calendar.google.com';
         //var start_date = new Date();
         //var query = Calendar.Events.list(calendar_id, {timeMin: start_date.toISOString()});
         //var events = query.items;
 
 
-        //gapi.client.calendar.events.list(listPara).then(function(response) 
-        //{
-            //var events = response.result.items;
-        //    console.log(response) ;
-        //});
+        gapi.client.calendar.events.list(listPara).then(function(response) 
+        {
+            var events = response.result.items;
+            console.log(response) ;
+        });
     }
     
     function makeCall()
