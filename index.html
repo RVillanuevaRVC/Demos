@@ -98,6 +98,26 @@
         console.log('updateSigninStatus');
         setSigninStatus();
     }
+    
+    // Example 1: Use method-specific function
+    var request = gapi.client.drive.about.get({'fields': 'user'});
+
+    // Execute the API request.
+    request.execute(function(response) 
+    {
+        console.log(response);
+    });
+
+
+
+    // Example 2: Use gapi.client.request(args) function
+    var request1 = gapi.client.request({'method': 'GET','path': '/drive/v3/about','params': {'fields': 'user'}});
+    // Execute the API request.
+    request1.execute(function(response) 
+    {
+        console.log(response);
+    });
+    
 </script>
 
 <button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
