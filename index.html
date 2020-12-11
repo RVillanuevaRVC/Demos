@@ -117,6 +117,7 @@
                 gapi.client.calendar.events.list(listPara).then(function (response) 
                     {
                         let events = response.result.items;
+                        console.log(events);
                         /* do something with events */
                     });
                 }
