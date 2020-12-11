@@ -1,187 +1,72 @@
-<!--
-  Copyright (c) 2011 Google Inc.
-  Licensed under the Apache License, Version 2.0 (the "License"); you may not
-  use this file except in compliance with the License. You may obtain a copy of
-  the License at
-  http://www.apache.org/licenses/LICENSE-2.0
-  Unless required by applicable law or agreed to in writing, software
-  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-  License for the specific language governing permissions and limitations under
-  the License.
-  To run this sample, set apiKey to your application's API key and clientId to
-  your application's OAuth 2.0 client ID. They can be generated at:
-    https://console.developers.google.com/apis/credentials?project=_
-  Then, add a JavaScript origin to the client that corresponds to the domain
-  where you will be running the script. Finally, activate the People API at:
-    https://console.developers.google.com/apis/library?project=_
--->
-<!DOCTYPE html>
 <html>
-  <head>
-    <title>Say hello using the Calendar API</title>
-    <meta charset='utf-8' />
-    <meta name="google-site-verification" content="R5NEx6e75dNLrsVyRC6hgVOcPbp3eud6vdGV_77zcDc" />
-  </head>
   <body>
-    <p>Say hello using the Calendar API.</p>
-
-    <!--Add buttons to initiate auth sequence and sign out-->
-    <button id="authorize-button" >Authorize</button>
-    <button id="signout-button" >Sign Out</button>
-
-    <div id="content"></div>
-
-
-
-    <script type="text/javascript">
-
-    //https://developers.google.com/identity/protocols/oauth2
-    //reference on Google
-    /*
-    There are several ways to use the JavaScript client library to make API requests, but they all follow the same basic pattern:
-
-    The application loads the JavaScript client library.
-    The application initializes the library with API key, OAuth client ID, and API Discovery Document(s).
-    The application sends a request and processes the response.
-    */
-
-
+    <div id='content'>
+      <h1>Events</h1>
+      <ul id='events'></ul>
+    </div>
+    <a href='#' id='authorize-button' onclick='handleAuthClick();'>Login</a>
     
-    var clientId = '381577823333-haoq049d003tiarou8ja75b5oidcnqo8.apps.googleusercontent.com';
-    //client key Tj7GqJIoX9jDJS1CPibYzc2t
-      var apiKey = 'AIzaSyAAn78q3Nm_9qJuuV5pV20DYP4oxd5YlA8';
-    var scopes = 'https://www.googleapis.com/auth/calendar';
-    var discoveryDocs = 'https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest' ;
-                       
-
-      var authorizeButton = document.getElementById('authorize-button');
-      var signoutButton = document.getElementById('signout-button');
-
-      function handleClientLoad() 
-      {
-        // Load the API client and auth2 library
-        //alert('handleClientLoad called'); 
-        gapi.load('client:auth2', initClient);
-      }
-
-      //funcion for initClient  
-      function initClient() 
-      {
-        //alert('initClient called'); 
-        console.log(apiKey);
-        console.log(discoveryDocs);
-        //console.log(clientId);
-        //console.log(scopes);
-        gapi.client.init({
-            'apiKey': apiKey,
-            'discoveryDocs': discoveryDocs,
-            'clientId': clientId,
-            'scope': scopes
-        }).then(
-                
-                function () 
-                {
-                    console.log('function initClient() then executed') ;
-                    // Listen for sign-in state changes.
-                    gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-                    // Handle the initial sign-in state.
-                    updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-
-                    authorizeButton.onclick = handleAuthClick;
-                    signoutButton.onclick = handleSignoutClick;
-                },
-                function(error) 
-                {
-                    console.log('function initClient() then function(error)  executed') ;
-                    appendPre(JSON.stringify(error, null, 2));
-                }
-            );
-        //alert('initClient exit'); 
-        console.log('function initClient() finished ') ;
-      }
+    <script>
+    
+    //refer to https://gsuite-developers.googleblog.com/2011/12/using-new-js-library-to-unlock-power-of.html
+    //and refer to https://groups.google.com/g/google-api-javascript-client?pli=1
+    
+      // Insert the JS from above, here.
+      var clientId = 'YOUR_CLIENT_ID';
+var apiKey = 'AIzaSyAAn78q3Nm_9qJuuV5pV20DYP4oxd5YlA8';
+var scopes = 'https://www.googleapis.com/auth/calendar';
       
+function handleClientLoad() 
+{
+  gapi.client.setApiKey(apiKey);
+  window.setTimeout(checkAuth,1);
+  checkAuth();
+}
+
+function checkAuth() 
+{
+  gapi.auth.authorize({client_id: clientId, scope: scopes, immediate: true},handleAuthResult);
+}
+
+function handleAuthResult(authResult) 
+{
+  var authorizeButton = document.getElementById('authorize-button');
+  if (authResult) {
+    authorizeButton.style.visibility = 'hidden';
+    makeApiCall();
+  } else {
+    authorizeButton.style.visibility = '';
+    authorizeButton.onclick = handleAuthClick;
+   }
+}
+
+function handleAuthClick(event) 
+{
+  gapi.auth.authorize(
+      {client_id: clientId, scope: scopes, immediate: false},
+      handleAuthResult);
+  return false;
+}
+
       
-      //function for updateSigninStatus  
-      function updateSigninStatus(isSignedIn) 
-      {
-        alert('updateSigninStatus called'); 
-        if (isSignedIn) 
-        {
-          authorizeButton.style.display = 'none';
-          signoutButton.style.display = 'block';
-          makeApiCall();
-        } else 
-        {
-          authorizeButton.style.display = 'block';
-          signoutButton.style.display = 'none';
-        }
-      }
-
-
-      function handleAuthClick(event) 
-      {
-          alert('handleAuthClick called'); 
-        gapi.auth2.getAuthInstance().signIn();
-      }
-
-
-      function handleSignoutClick(event) 
-      {
-          alert('handleSignoutClick called'); 
-        gapi.auth2.getAuthInstance().signOut();
-      }
-
-      // Load the API and make an API call.  Display the results on the screen.
       function makeApiCall() 
-      {
-          alert('makeApiCall called'); 
-        gapi.client.people.people.get({
-          'resourceName': 'people/me',
-          'requestMask.includeField': 'person.names'
-        }).then(function(resp) 
-            {
-                var p = document.createElement('p');
-                var name = resp.result.names[0].givenName;
-                p.appendChild(document.createTextNode('Hello, '+name+'!'));
-                document.getElementById('content').appendChild(p);
-            }
-        );
+{
+  gapi.client.load('calendar', 'v3', function() {
+    var request = gapi.client.calendar.events.list({
+      'calendarId': 'primary'
+    });
+          
+    request.execute(function(resp) {
+      for (var i = 0; i < resp.items.length; i++) {
+        var li = document.createElement('li');
+        li.appendChild(document.createTextNode(resp.items[i].summary));
+        document.getElementById('events').appendChild(li);
       }
-    
-
-        function start() 
-        {
-            // Initializes the client with the API key and the Translate API.
-            gapi.client.init({
-                'apiKey': 'AIzaSyCxmCwLCpeQRyyF_P-5LEXIlQnJqDy2UCM',
-                'discoveryDocs': ['https://www.googleapis.com/discovery/v1/apis/translate/v2/rest'],
-            }).then(function() 
-            {
-                // Executes an API request, and returns a Promise.
-                // The method name `language.translations.list` comes from the API discovery.
-                return gapi.client.language.translations.list({
-                    q: 'hello world',
-                    source: 'en',
-                    target: 'de',
-                });
-            }).then(function(response) 
-            {
-                console.log(response.result.data.translations[0].translatedText);
-            }, function(reason) {
-            console.log('Error: ' + reason.result.error.message);
-            });
-      };
-
-      // Loads the JavaScript client library and invokes `start` afterwards.
-      //gapi.load('client', start);
-
+    });
+  });
+}
+      
     </script>
-<script async defer src="https://apis.google.com/js/api.js" 
-      onload="this.onload=function(){};handleClientLoad()" 
-      onreadystatechange="if (this.readyState === 'complete') this.onload()">
-    </script>
-    
+    <script src="https://apis.google.com/js/client.js?onload=handleClientLoad"></script>
   </body>
 </html>
