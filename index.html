@@ -99,6 +99,40 @@
         setSigninStatus();
     }
     
+    
+    function listUpcomingEvents() 
+    {
+        gapi.client.calendar.events.list({
+          'calendarId': 'primary',
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 10,
+          'orderBy': 'startTime'
+        }).then(function(response) 
+        {
+          var events = response.result.items;
+          appendPre('Upcoming events:');
+
+          if (events.length > 0) 
+          {
+            for (i = 0; i < events.length; i++) 
+            {
+              var event = events[i];
+              var when = event.start.dateTime;
+              if (!when) 
+              {
+                when = event.start.date;
+              }
+              appendPre(event.summary + ' (' + when + ')')
+            }
+          }
+          else 
+          {
+            appendPre('No upcoming events found.');
+          }
+        });
+    }
     function makeCall()
     {
         console.log('makeCall') ;
@@ -126,7 +160,7 @@
 
 <button id="sign-in-or-out-button" style="margin-left: 25px">Sign In/Authorize</button>
 <button id="revoke-access-button"  style="display: none; margin-left: 25px">Revoke access</button>
-<button id="make call" onclick="makeCall()" >make call</button>
+<button id="make call" onclick="listUpcomingEvents()" >listUpcomingEvents call</button>
 
 <div id="auth-status" style="display: inline; padding-left: 25px"></div><hr>
 
